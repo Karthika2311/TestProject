@@ -1,7 +1,9 @@
 package com.api.googleAPI;
 
 import com.api.excelReader.ExcelReader;
+import com.api.report.ExtentReport;
 import com.api.utilities.RestServiceHelper;
+import com.relevantcodes.extentreports.LogStatus;
 
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
@@ -13,6 +15,8 @@ public class UpdatePlace {
 		Response response;
 		int statusCode;
 		String msg;
+		//ExtentReport.report();
+		ExtentReport.startTest("Update Place in Google API");
 		String baseURL="https://rahulshettyacademy.com";
 		restserviceHelper.initiateRequest();
 		restserviceHelper.setbaseURI(baseURL);
@@ -20,7 +24,7 @@ public class UpdatePlace {
 		restserviceHelper.setHeader("Content-Type","application/json");
 		restserviceHelper.generatePostBodyFromJSONObject(Payload.payloadUpdate());
 		response=restserviceHelper.setPutResourse("/maps/api/place/update/json");
-		restserviceHelper.checkStatusCodeIs200(response);
+		restserviceHelper.checkResponse(response);
 		JsonPath js=restserviceHelper.getResponse(response);
 		msg=js.getString("msg");
 		statusCode=restserviceHelper.getStatusCode(response);
@@ -30,9 +34,14 @@ public class UpdatePlace {
 		if(actualStatusCode.equalsIgnoreCase("200"))
 		{
 			ExcelReader.setValue(i, "ExecutionStatus","PASS");
+			ExtentReport.statusPass(LogStatus.PASS, "Status code:"+statusCode+"  "+"Updated the Place into Google API");
+			ExtentReport.statusPass(LogStatus.PASS,restserviceHelper.getResponseAsString(response));
 		}
-		else
+		else {
 			ExcelReader.setValue(i, "ExecutionStatus","FAIL");
+			ExtentReport.statusFail(LogStatus.FAIL, "Status code:"+statusCode);
+			ExtentReport.statusFail(LogStatus.PASS,restserviceHelper.getResponseAsString(response));
+		}
 
 
 	}

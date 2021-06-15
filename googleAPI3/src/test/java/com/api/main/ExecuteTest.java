@@ -5,10 +5,11 @@ import com.api.googleAPI.AddPlace;
 import com.api.googleAPI.DeletePlace;
 import com.api.googleAPI.GetPlace;
 import com.api.googleAPI.UpdatePlace;
+import com.api.report.ExtentReport;
 
 public class ExecuteTest {
 
-	 public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
 		String filePath="TestData.xlsx";
 		ExcelReader dataTable=new ExcelReader(filePath);
@@ -16,6 +17,7 @@ public class ExecuteTest {
 		noOfRow=dataTable.getNoOfRow();
 		String testCaseName;
 		int i;
+		ExtentReport.report();
 		for(i=0;i<noOfRow;i++)
 		{
 			testCaseName=ExcelReader.getData(i, "TestcaseName");
@@ -40,6 +42,10 @@ public class ExecuteTest {
 
 			}
 		}
+
+		ExtentReport.endTest();
+		ExtentReport.flush();
+
 
 	}
 
